@@ -55,16 +55,28 @@ public class FileSystem {
     }
 
     public void delete(String path) {
-        //TODO: detele the file/directory with the given path
+        List<Entry> entries = resolve(path);
+        if (entries.get(entries.size() - 1) == null) { //the entry to be deleted is not exist, do noting
+            return;
+        }
+        entries.get(entries.size() - 1).detele();
     }
 
     public Entry[] list(String path) {
-        //TODO: list all the immediate children of the directory specified by the given path
-        return null;
+        List<Entry> entries = resolve(path);
+        if (entries.get(entries.size() - 1) == null || entries.get(entries.size() - 1) instanceof File) {
+            return null;
+        }
+        Directory curDirectory = (Directory) entries.get(entries.size() - 1);
+        int numberOfChildren = curDirectory.contents.size();
+        Entry[] res = new Entry[numberOfChildren];
+        for (int i = 0; i < numberOfChildren; i++) {
+            res[i] = curDirectory.contents.get(i);
+        }
+        return res;
     }
 
     public int count() {
-        //TODO: return the total number of the files/directories in the FileSystem
-        return 0;
+        return root.numberOfFiles();
     }
 }
